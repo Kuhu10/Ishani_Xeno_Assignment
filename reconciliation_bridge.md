@@ -1,0 +1,12 @@
+| Steps | Description | Result | Reason |
+| :--- | :--- | :--- | :--- |
+| **Q1** | Naive count- all log rows for merchant 501, type 2, October 2026, Diwali campaigns | 30 | Basic Query to calculate |
+| **Q2** | Applied campaign eligibility filters | 26 | Dropped approval_waiting rows as not every logged row is real send |
+| **Q3** | Campaign-level breakdown of the 26 eligible rows | 9001: 10<br>9002: 2<br>9003: 1<br>9101: 7<br>9201: 5<br>9202: 1 | Rows were spread across parent and child campaigns. So needed to understand the relationships before counting customers. |
+| **Q4** | Customer-level profiling within each campaign | Repeated customers across 9001/9002/9003 and 9201/9202, C20 repeats within 9101 | Checked if repeats were duplicate retries or genuine separate sends |
+| **Q5** | Naive COUNT(DISTINCT customer_id) across all 26 eligible rows | 21 | Did not match Finance’s expected 22 and realized deduping globally was merging C20's two real standalone sends into one. |
+| **Q6, Q7** | Mapped parent_id chains and checked which root campaigns actually had children | 9001 → 9002 → 9003 and 9201 → 9202 are retry families; 9101 is truly standalone | parent_id IS NULL does not automatically mean standalone. Some root campaigns had retry chains so need to check children too. |
+| **Q8** | Compared raw attempt count vs distinct customer count per root | 9001: 13 → 10<br>9101: 7 → 6<br>9201: 6 → 5 | Showed where repeats existed, to decide counting rule for each campaign type |
+| **Q9** | Isolated standalone campaign 9101 and checked repeated sends | 7 sends, 6 customers<br>C20 sent twice | The repeat is a legitimate second send, not a retry, so standalone must use COUNT(*) |
+| **Q10** | Isolated retry families 9001 and 9201 and looked after repeated customers | 9001: 13 → 10<br>9201: 6 → 5 | A failed send gets retried under a child campaign. So counting every row overstates reach - only delivered customer should count |
+| **Q11** | Combined eligibility filter + retry-family grouping via parent-child chain + COUNT(DISTINCT delivered customer) for retry families + COUNT(*) for standalone | 22 | Combines all the rules found while profiling and it matches Finance's number. |
