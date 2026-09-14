@@ -1,4 +1,4 @@
-APPROACH FOLLOWED
+**APPROACH FOLLOWED**
 
 Followed a Profile → Decompose → Reconcile → Validate approach.
 
@@ -19,6 +19,9 @@ Verified intermediate outputs, joins and the filtering logic at each stage to en
 **REPO STRUCTURE**
 
 **Final Query** ➔ finalized_query.sql
+
 **Reconciliation Bridge Table** ➔ reconciliation_bridge.md
+
 **Step-by-Step Reconciliation Queries** ➔ reconciliation_queries/
+
 **Raw Database** ➔ comm_log.db
