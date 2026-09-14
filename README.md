@@ -1,4 +1,5 @@
-##APPROACH FOLLOWED
+APPROACH FOLLOWED
+
 Followed a Profile → Decompose → Reconcile → Validate approach.
 
 **1. Profile the data**
@@ -16,6 +17,7 @@ Each step was recorded in a dedicated SQL query with output metrics
 Verified intermediate outputs, joins and the filtering logic at each stage to ensure that the number that was output by the query was not merely a query output but fully explainable.
 
 **REPO STRUCTURE**
+
 **Final Query** ➔ finalized_query.sql
 **Reconciliation Bridge Table** ➔ reconciliation_bridge.md
 **Step-by-Step Reconciliation Queries** ➔ reconciliation_queries/
