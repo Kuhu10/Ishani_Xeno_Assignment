@@ -1,0 +1,12 @@
+SELECT COUNT(*) AS total_communication_rows
+FROM communication_log
+WHERE merchant_id = 501
+  AND communication_type = '2'
+  AND sent_time >= '2026-10-01'
+  AND sent_time < '2026-11-01';
+
+/* OUTPUT 
+total_communication_rows
+------------------------
+30  
+*/
